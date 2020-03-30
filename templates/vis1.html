@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Project 2 Group 3 - Visual One</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/small-business.css') }}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Project 2 - Group 3</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="vis1.html">Visual One</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="vis2.html">Visual Two</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="vis3.html">Visual Three</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="vis4.html">Visual Four</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Heading Row -->
+        <div class="row align-items-center my-5">
+            <div class="col-lg-7">
+                <div id="bar-plot"></div>
+            </div>
+            <!-- /.col-lg-8 -->
+            <div class="col-lg-5">
+                <h1 class="font-weight-light">Visual One</h1>
+                <p>This data set is comprised of exactly 341 individual player records for the 2016-2017 NBA Season. The
+                    visual provided compares the average points per game each player recorded that season versus the
+                    player salaries (in millions). As you can see there is a clear and positive correlation between
+                    player performance and their annual salaries. Players like LeBron James, James Harden and Russel
+                    Westbrook were statistical fits. While players like Isaiah Thomas and Tristian Thompson were
+                    statistical outliers.</p>
+            </div>
+            <!-- /.col-md-4 -->
+        </div>
+        <!-- /.row -->
+
+        <!-- Call to Action Well -->
+        <div class="card text-white bg-secondary my-5 py-4 text-center">
+            <div class="card-body">
+                <p class="text-white m-0">"Ask me to steal, block out, sacrifice, lead, dominate. Anything. But it's not
+                    what you ask of me, it's what I ask of MYSELF"<br>- LeBron James</p>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; MMXX <i>Project 2 - Group 3</i> </p>
+        </div>
+        <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!--div for js scripts-->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="{{ url_for('static', filename='js/vis1.js') }}"></script>
+
+</body>
+
+</html>
