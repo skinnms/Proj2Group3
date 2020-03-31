@@ -1,3 +1,7 @@
+Plotly.d3.csv("/data/nba.db").then(function (data) {
+  console.log(data[0]);
+});
+
 var eyeColor = ["Brown", "Brown", "Brown", "Brown", "Brown",
   "Brown", "Brown", "Brown", "Green", "Green",
   "Green", "Green", "Green", "Blue", "Blue",
