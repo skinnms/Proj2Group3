@@ -1,7 +1,9 @@
 # import dependencies
-import csv
+import os
 import sqlite3
-from flask import Flask, request, g, render_template
+import pandas as pd
+from flask import Flask, g, render_template
+from contextlib import closing
 
 app = Flask(__name__)
 
@@ -48,9 +50,16 @@ def ppt():
 
 @app.route("/vis1.html", methods=["GET"])
 def vis1():
-    # var1 = execute_query("""SELECT * FROM natlpark""")
-    # var2 = execute_query("""SELECT * FROM natlpark""")
-    return render_template("vis1.html")
+    # Read sqlite query results into a pandas DataFrame
+    con = sqlite3.connect("nba.db")
+    df = pd.read_sql_query("SELECT * from nba_2017_nba_players_with_salary", con)
+    # verify that result of SQL query is stored in the dataframe
+    print(df.to_json())
+    con.close()
+    # define the varibles and render to page
+    labels = df["SALARY_MILLIONS"].values.tolist()
+    values = df["POINTS"].values.tolist()
+    return render_template("vis1.html", labels=labels, values=values)
 
 
 @app.route("/vis2.html", methods=["GET"])

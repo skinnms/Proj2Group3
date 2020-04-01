@@ -16,6 +16,9 @@
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/small-business.css') }}" rel="stylesheet">
 
+    <!-- import plugin script -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+
 </head>
 
 <body>
@@ -58,7 +61,53 @@
         <!-- Heading Row -->
         <div class="row align-items-center my-5">
             <div class="col-lg-7">
-                <div id="bar-plot"></div>
+                <!-- bar chart canvas element -->
+                <canvas id="myChart" </canvas>
+                    <script>
+                        // Global parameters:
+                        // do not resize the chart canvas when its container does (keep at 600x400px)
+                        Chart.defaults.global.responsive = true;
+
+                        // define the chart data
+                        var chartData = {
+                            labels: [{% for item in labels %}
+                        "{{item}}",
+                            {% endfor %}],
+                        datasets: [{
+                            label: 'NBA 2016 Stats: Comparing Salary Vs. PPG',
+                            fill: true,
+                            lineTension: 0.1,
+                            backgroundColor: "rgba(0, 0, 255, 0.4)",
+                            borderColor: "rgba(0, 0, 0, 1)",
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: "rgba(255, 0, 0, 0.4)",
+                            pointBackgroundColor: "#fff",
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(79, 79, 79, 0.4)",
+                            pointHoverBorderColor: "rgba(79, 79, 79, 1)",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 10,
+                            data: [{% for item in values %}
+                                    {{ item }},
+                        {% endfor %}],
+                            spanGaps: false
+                      }]
+                    }
+
+                        // get chart canvas
+                        var ctx = document.getElementById("myChart").getContext("2d");
+
+                        // create the chart using the chart canvas
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: chartData,
+                        });
+                    </script>
             </div>
             <!-- /.col-lg-8 -->
             <div class="col-lg-5">
@@ -101,7 +150,7 @@
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!--div for js scripts-->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
     <script src="{{ url_for('static', filename='js/vis1.js') }}"></script>
 
 </body>
