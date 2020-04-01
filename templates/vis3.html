@@ -8,13 +8,16 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Project 2 Group 3 - Visual Three</title>
+    <title>Mr. Popular?</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/small-business.css') }}" rel="stylesheet">
+
+    <!-- import plugin script -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
 
 </head>
 
@@ -36,16 +39,19 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="vis1.html">Visual One</a>
+                        <a class="nav-link" href="vis1.html">Pay to Win?</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="vis2.html">Visual Two</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="vis3.html">Visual Three</a>
+                        <a class="nav-link" href="vis2.html">Putting Butts in Seats</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="vis4.html">Visual Four</a>
+                        <a class="nav-link active" href="vis3.html">Mr. Popular?</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="vis4.html">Youth vs Experience</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ppt.html">Slides</a>
                     </li>
                 </ul>
             </div>
@@ -58,13 +64,63 @@
         <!-- Heading Row -->
         <div class="row align-items-center my-5">
             <div class="col-lg-7">
-                <div id="bar-plot"></div>
+                <!-- bar chart canvas element -->
+                <canvas id="myChart" </canvas>
+                    <script>
+                        // Global parameters:
+                        // do not resize the chart canvas when its container does (keep at 600x400px)
+                        Chart.defaults.global.responsive = true;
+
+                        // define the chart data
+                        var chartData = {
+                            labels: [{% for item in labels %}
+                        "{{item}}",
+                            {% endfor %}],
+                        datasets: [{
+                            label: 'Twitter Favorite Count',
+                            fill: true,
+                            lineTension: 0.1,
+                            backgroundColor: "rgba(255,0,0,0.2)",
+                            borderColor: "rgba(79, 79, 79, 1)",
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: "rgba(79, 79, 79, 0.4)",
+                            pointBackgroundColor: "#fff",
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(79, 79, 79, 0.4)",
+                            pointHoverBorderColor: "rgba(79, 79, 79, 1)",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 10,
+                            data: [{% for item in values %}
+                                    {{ item }},
+                        {% endfor %}],
+                            spanGaps: false
+                      }]
+                    }
+
+                        // get chart canvas
+                        var ctx = document.getElementById("myChart").getContext("2d");
+
+                        // create the chart using the chart canvas
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: chartData,
+                        });
+                    </script>
             </div>
             <!-- /.col-lg-8 -->
             <div class="col-lg-5">
-                <h1 class="font-weight-light">Visual Three</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex
-                    numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                <h3 class="font-weight-light">Twitter Favorite Count vs Salary</h3>
+                <p>This graphic is to show how social media impacts NBA players’ salary in 2017.
+                    Each bar shows NBA player’s salary bucket, range from under 10 million to over 30 million
+                    and total Twitter favorite count. According to the chart, we can tell social media does not
+                    impact NBA players’ salary. The players with higher salary do not have more favorite count.
+                    Stephen Curry, the player with most Twitter favorite count’s salary falls into 10-20 million bucket.
+                </p>
             </div>
             <!-- /.col-md-4 -->
         </div>
@@ -73,8 +129,8 @@
         <!-- Call to Action Well -->
         <div class="card text-white bg-secondary my-5 py-4 text-center">
             <div class="card-body">
-                <p class="text-white m-0">This call to action card is a great place to showcase some important
-                    information or display a clever tagline!</p>
+                <p class="text-white m-0">"Success is not an accident, success is actually a choice."<br>― Stephen Curry
+                </p>
             </div>
         </div>
 
@@ -87,7 +143,8 @@
     <!-- Footer -->
     <footer class="py-5 bg-dark">
         <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; MMXX <i>Project 2 - Group 3</i> </p>
+            <p class="m-0 text-center text-white">Copyright &copy; MMXX <i>Project 2 - Group 3 <br>Bryan Kariuki, JoTing
+                    Wong, Jack Cook, Joseph Hnat, Matthew Skinner</i> </p>
         </div>
         <!-- /.container -->
     </footer>
@@ -97,9 +154,8 @@
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!--div for js scripts-->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="{{ url_for('static', filename='js/vis3.js') }}"></script>
-
+    <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
+    <script src="{{ url_for('static', filename='js/vis1.js') }}"></script>
 
 </body>
 
