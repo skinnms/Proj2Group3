@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+​
 
 <head>
-
+    ​
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>Project 2 Group 3 - Visual Two</title>
-
+    ​
+    <title>Project 2 Group 3 - Putting Butts in Seats</title>
+    ​
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-
+    ​
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/small-business.css') }}" rel="stylesheet">
-
+    ​
+    <!-- import plugin script -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+    ​
 </head>
+​
 
 <body>
-
+    ​
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
@@ -36,71 +41,162 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="vis1.html">Visual One</a>
+                        <a class="nav-link" href="vis1.html">Pay to Win?</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="vis2.html">Visual Two</a>
+                        <a class="nav-link" href="vis2.html">Putting Butts in Seats</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="vis3.html">Visual Three</a>
+                        <a class="nav-link" href="vis3.html">Mr. Popular?</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="vis4.html">Visual Four</a>
+                        <a class="nav-link" href="vis4.html">Youth vs Experience</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ppt.html">Slides</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-
+    ​
     <!-- Page Content -->
     <div class="container">
-
+        ​
         <!-- Heading Row -->
         <div class="row align-items-center my-5">
             <div class="col-lg-7">
-                <div id="bar-plot"></div>
+                <!-- bar chart canvas element -->
+                <canvas id="myChart" </canvas>
+                    <script>
+                        // Global parameters:
+                        // do not resize the chart canvas when its container does (keep at 600x400px)
+                        Chart.defaults.global.responsive = true;
+
+                        // define the chart data
+                        var chartData = {
+                            labels: [{% for item in values %}
+                        "{{item}}",
+                            {% endfor %}],
+                        datasets: [{
+                            label: 'NBA Team Avg Attendance vs Team Valuation in Millions: 2016-2017 Season',
+                            fill: true,
+                            drawTicks: true,
+                            lineTension: 0.1,
+                            backgroundColor: "rgba(0, 255, 0, 0.4)",
+                            borderColor: "rgba(0, 0, 255, 1)",
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: "rgba(0, 255, 0, 0.4)",
+                            pointBackgroundColor: "rgba(0, 255, 0, 0.4)",
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(79, 79, 79, 0.4)",
+                            pointHoverBorderColor: "rgba(79, 79, 79, 1)",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 10,
+
+                            data: [{% for item in data2 %}
+                                    {{ item }},
+                        {% endfor %}],
+                            spanGaps: false
+                      }]
+                    }
+
+                        // get chart canvas
+                        var ctx = document.getElementById("myChart").getContext("2d");
+
+                        // create the chart using the chart canvas
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: chartData,
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            // Include a dollar sign in the ticks
+                                            callback: function (data2, index, values) {
+                                                return '$' + data2;
+                                            }
+                                        }
+                                    }]
+                                }
+                            }
+
+                        });
+                    </script>
             </div>
             <!-- /.col-lg-8 -->
             <div class="col-lg-5">
-                <h1 class="font-weight-light">Visual Two</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex
-                    numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                <h1 class="font-weight-light">Putting Butts in Seats</h1>
+                <p>The NBA has a total of 30 teams. Monetary valuations of each franchise range from $750 million to $3
+                    billion, with the New Orleans Pelicans being the lowest valued, and the New York Knicks being the
+                    highest valued.
+                    When it comes to arena capacity and fan attendance, values ranged from 72.4% of capacity to 103.6%
+                    of capacity.
+                    Looking at the visualization we can see that nearly all of the highest valued teams($1+ billion)
+                    filled 99.2% or more of seats.
+                    Of the teams valued under $1 billion, the Utah Jazz did the best job of filling the seats at 98.8%.
+                    After the Jazz, attendance and valuation generally start to drop off equally.
+                    There are a few outliers, namely the Brooklyn Nets, and Houston Rockets. Both franchises are worth
+                    in excess of $1.5 billion, yet in the bottom half of attendance, with the Nets only filling 85.2% of
+                    their seats.
+
+                    <p>This visualization does show that the highest valued franchises do indeed have the highest
+                        average attendance.
+                        To get an answer as to why, we would need to dig deeper.
+                        So many factors go into attendance, such as franchise market, star players, franchise history,
+                        ticket prices, the arena itself, and most importantly, team performance.
+                        One example would be to look at the Dallas Mavericks who averaged 103.1% of capacity, and the
+                        Houston Rockets who were at only 94.1% of capacity.
+                        A safe assumption would be the Mavericks had a good record, and the Rockets had a bad record.
+                        In this case, the opposite is true because the Mavericks were one of the worst teams in the
+                        league that season, and Rockets were one of the best. Do the Rockets play a boring style of
+                        basketball? Do they have no star players? Ultimately more data would need to be analyzed to
+                        answer these, and similar questions.
+                    </p>
             </div>
             <!-- /.col-md-4 -->
         </div>
         <!-- /.row -->
-
+        ​
         <!-- Call to Action Well -->
         <div class="card text-white bg-secondary my-5 py-4 text-center">
             <div class="card-body">
-                <p class="text-white m-0">This call to action card is a great place to showcase some important
-                    information or display a clever tagline!</p>
+                <p class="text-white m-0">To ask people to spend $36 for a night at the Sixers
+                    [the price of four of the best tickets], that's a tough act to sell in a working-class town."<br> –
+                    Julius Irving</p>
             </div>
         </div>
-
+        ​
     </div>
     <!-- /.row -->
-
+    ​
     </div>
     <!-- /.container -->
-
+    ​
     <!-- Footer -->
     <footer class="py-5 bg-dark">
         <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; MMXX <i>Project 2 - Group 3</i> </p>
+            <p class="m-0 text-center text-white">Copyright &copy; MMXX <i>Project 2 - Group 3 <br>Bryan Kariuki, JoTing
+                    Wong, Jack Cook, Joseph Hnat, Matthew Skinner</i> </p>
         </div>
         <!-- /.container -->
     </footer>
-
+    ​
     <!-- Bootstrap core JavaScript -->
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
+    ​
     <!--div for js scripts-->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="{{ url_for('static', filename='js/vis2.js') }}"></script>
-
-
+    ​
+    ​
 </body>
+​
 
 </html>

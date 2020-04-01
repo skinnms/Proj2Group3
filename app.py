@@ -5,36 +5,33 @@ import pandas as pd
 from flask import Flask, g, render_template
 from contextlib import closing
 
+## list of tables from nba.db
+# nba_2016_2017_100
+# nba_2017_att_val
+# nba_2017_att_val_elo
+# nba_2017_att_val_elo_with_cluster
+# nba_2017_attendance
+# nba_2017_br
+# nba_2017_elo
+# nba_2017_endorsements
+# nba_2017_nba_players_with_salary
+# nba_2017_pie
+# nba_2017_player_wikipedia
+# nba_2017_players_stats_combined
+# nba_2017_players_with_salary_wiki_twitter
+# nba_2017_real_plus_minus
+# nba_2017_team_valuations
+
+
+# create application
 app = Flask(__name__)
 
-DATABASE = "nba.db"
+# configuration
+app.config.update(dict(DATABASE=os.path.join(app.root_path, "nba.db"),))
 
-app.config.from_object(__name__)
 
-
-def connect_to_database():
+def connect_db():
     return sqlite3.connect(app.config["DATABASE"])
-
-
-def get_db():
-    db = getattr(g, "db", None)
-    if db is None:
-        db = g.db = connect_to_database()
-    return db
-
-
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, "db", None)
-    if db is not None:
-        db.close()
-
-
-def execute_query(query, args=()):
-    cur = get_db().execute(query, args)
-    rows = cur.fetchall()
-    cur.close()
-    return rows
 
 
 # routes for each page
@@ -64,108 +61,46 @@ def vis1():
 
 @app.route("/vis2.html", methods=["GET"])
 def vis2():
-    return render_template("vis2.html")
+    # Read sqlite query results into a pandas DataFrame
+    con = sqlite3.connect("nba.db")
+    df = pd.read_sql_query("SELECT * from nba_2017_att_val", con)
+    # verify that result of SQL query is stored in the dataframe
+    print(df.to_json())
+    con.close()
+    # define the variables and render to page
+    values = df["PCT"].values.tolist()  # x axis
+    labels = df["TEAM"].values.tolist()
+    data2 = df["VALUE_MILLIONS"].values.tolist()
+    return render_template("vis2.html", labels=labels, values=values, data2=data2)
 
 
 @app.route("/vis3.html", methods=["GET"])
 def vi3():
-    return render_template("vis3.html")
+    con = sqlite3.connect("nba.db")
+    df = pd.read_sql_query(
+        "SELECT CASE WHEN SALARY_MILLIONS < 10 THEN 'Under 10 Million' WHEN SALARY_MILLIONS >= 10 AND SALARY_MILLIONS < 20 THEN '10-20 Million' WHEN SALARY_MILLIONS >= 20 AND SALARY_MILLIONS < 30 THEN '20-30 Million' ELSE 'Over 30 Million' END AS Salary_Bucket, SUM(CASE WHEN TWITTER_FAVORITE_COUNT = '' OR TWITTER_FAVORITE_COUNT IS NULL THEN 0 ELSE TWITTER_FAVORITE_COUNT END) AS TWITTER_FAVORITE_COUNT from nba_2017_players_with_salary_wiki_twitter GROUP BY CASE WHEN SALARY_MILLIONS < 10 THEN 'Under 10 Million' WHEN SALARY_MILLIONS >= 10 AND SALARY_MILLIONS < 20 THEN '10-20 Million' WHEN SALARY_MILLIONS >= 20 AND SALARY_MILLIONS < 30 THEN '20-30 Million' ELSE 'Over 30 Million' END",
+        con,
+    )
+    # verify that result of SQL query is stored in the dataframe
+    print(df.to_json())
+    con.close()
+    # define the varibles and render to page
+    labels = df["Salary_Bucket"].values.tolist()  # x axis
+    values = df["TWITTER_FAVORITE_COUNT"].values.tolist()
+    return render_template("vis3.html", labels=labels, values=values)
 
 
 @app.route("/vis4.html", methods=["GET"])
 def vis4():
-    return render_template("vis4.html")
-
-
-# routes for databases
-@app.route("/nba_2016_2017_100")
-def nba_2016_2017_100():
-    rows = execute_query("""SELECT * FROM nba_2016_2017_100""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_att_val")
-def nba_2017_att_val():
-    rows = execute_query("""SELECT * FROM nba_2017_att_val""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_att_val_elo")
-def nba_2017_att_val_elo():
-    rows = execute_query("""SELECT * FROM nba_2017_att_val_elo""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_att_val_elo_with_cluster")
-def nba_2017_att_val_elo_with_cluster():
-    rows = execute_query("""SELECT * FROM nba_2017_att_val_elo_with_cluster""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_attendance")
-def nba_2017_attendance():
-    rows = execute_query("""SELECT * FROM nba_2017_attendance""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_br")
-def nba_2017_br():
-    rows = execute_query("""SELECT * FROM nba_2017_br""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_elo")
-def nba_2017_elo():
-    rows = execute_query("""SELECT * FROM nba_2017_elo""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_endorsements")
-def nba_2017_endorsements():
-    rows = execute_query("""SELECT * FROM nba_2017_endorsements""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_nba_players_with_salary")
-def nba_2017_nba_players_with_salary():
-    rows = execute_query("""SELECT * FROM nba_2017_nba_players_with_salary""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_pie")
-def nba_2017_pie():
-    rows = execute_query("""SELECT * FROM nba_2017_pie""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_player_wikipedia")
-def nba_2017_player_wikipedia():
-    rows = execute_query("""SELECT * FROM nba_2017_player_wikipedia""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_players_stats_combined")
-def nba_2017_players_stats_combined():
-    rows = execute_query("""SELECT * FROM nba_2017_players_stats_combined""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_players_with_salary_wiki_twitter")
-def nba_2017_players_with_salary_wiki_twitter():
-    rows = execute_query("""SELECT * FROM nba_2017_players_with_salary_wiki_twitter""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_real_plus_minus")
-def nba_2017_real_plus_minus():
-    rows = execute_query("""SELECT * FROM nba_2017_real_plus_minus""")
-    return "<br>".join(str(row) for row in rows)
-
-
-@app.route("/nba_2017_team_valuations")
-def nba_2017_team_valuations():
-    rows = execute_query("""SELECT * FROM nba_2017_team_valuations""")
-    return "<br>".join(str(row) for row in rows)
+    con = sqlite3.connect("nba.db")
+    df = pd.read_sql_query("SELECT TEAM, AVG(AGE) from nba_2017_pie GROUP BY TEAM", con)
+    # verify that result of SQL query is stored in the dataframe
+    print(df.to_json())
+    con.close()
+    # define the varibles and render to page
+    labels = df["TEAM"].values.tolist()  # x axis
+    values = df["AVG(AGE)"].values.tolist()
+    return render_template("vis4.html", labels=labels, values=values)
 
 
 if __name__ == "__main__":
