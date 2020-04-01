@@ -22,6 +22,7 @@ from contextlib import closing
 # nba_2017_real_plus_minus
 # nba_2017_team_valuations
 
+
 # create application
 app = Flask(__name__)
 
